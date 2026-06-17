@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>VANGUARD</title>
 <style>
-/* [Your exact original CSS goes here — unchanged. I'm keeping it identical for brevity.] */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,11 +30,306 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ... (all your original styles for #shell, #hdr, tabs, tiles, .all-item, .art, .msg, etc. — copy-paste them from your file) ... */
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+#shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  height: 100vh;
+}
+
+/* HEADER */
+#hdr {
+  flex-shrink: 0;
+  background: var(--bg);
+  border-bottom: 2px solid var(--red);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 19px;
+  letter-spacing: 0.06em;
+  color: var(--red3);
+  text-shadow: 0 0 16px rgba(204,0,0,0.5);
+  line-height: 1;
+  flex-shrink: 0;
+}
+#logo em { color: var(--txt); font-style: normal; font-weight: 700; }
+
+#stat {
+  flex: 1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#btnRefresh {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--red2);
+  color: var(--red2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+#btnRefresh:hover  { border-color: var(--red); color: var(--red); }
+#btnRefresh:disabled { opacity: 0.35; pointer-events: none; }
+
+/* TABS */
+#tabs {
+  flex-shrink: 0;
+  background: var(--surf);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#tabs::-webkit-scrollbar { display: none; }
+
+#tabsInner {
+  display: flex;
+  padding: 0 4px;
+  min-width: max-content;
+}
+
+.tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  border: none;
+  background: none;
+  color: var(--dim);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s;
+}
+.tab.on  { color: var(--red3); border-bottom-color: var(--red); }
+.tab:hover:not(.on) { color: var(--txt); }
+
+/* MAIN SCROLL AREA */
+#main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* HOME GRID */
+#pgHome {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px;
+}
+@media (min-width: 460px) { #pgHome { grid-template-columns: repeat(3,1fr); } }
+@media (min-width: 640px) { #pgHome { grid-template-columns: repeat(4,1fr); } }
+
+.tile {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 12px 10px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s, background 0.15s;
+  min-height: 76px;
+}
+.tile:hover { border-color: var(--red2); background: #180d0d; }
+
+.tile-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--red3);
+}
+.tile-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--txt);
+  line-height: 1.3;
+}
+.tile-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.tile-info {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  margin-top: auto;
+  padding-top: 5px;
+}
+.c-ok    { color: #44AA44; }
+.c-err   { color: #AA3333; }
+.c-dim   { color: var(--dim); }
+
+/* ALL VIEW */
+#pgAll {}
+
+.all-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.1s;
+}
+.all-item:hover { background: var(--card); }
+
+.all-row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.all-src {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--red2);
+  flex-shrink: 0;
+}
+.all-age {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+.all-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--txt);
+  line-height: 1.35;
+}
+
+/* FEED VIEW */
+#pgFeed {}
+
+.feed-hdr {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.feed-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--txt);
+  line-height: 1.2;
+}
+.feed-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+.badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  border: 1px solid;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.art {
+  display: block;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.1s;
+}
+.art:hover { background: var(--card); }
+
+.art-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--txt);
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+.art-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.art-meta .dot { color: var(--red2); }
+.art-desc {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.5;
+  margin-top: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* MESSAGES */
+.msg {
+  padding: 48px 20px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  line-height: 1.9;
+}
+.msg a { color: var(--red); text-decoration: none; }
+.msg a:hover { text-decoration: underline; }
+.msg.err { color: var(--red2); }
+
+@keyframes pulse { 50% { opacity: 0.2; } }
+.loading::before {
+  content: '▓▒░  ';
+  color: var(--red);
+  animation: pulse 0.8s step-end infinite;
+}
 </style>
 </head>
 <body>
 <div id="shell">
+
   <header id="hdr">
     <div id="logo">VAN<em>GUARD</em></div>
     <div id="stat">Initialising…</div>
@@ -49,28 +343,31 @@ html, body {
     <div id="pgAll"  style="display:none"></div>
     <div id="pgFeed" style="display:none"></div>
   </div>
+
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════
-// CONFIG — EDIT THESE
+// CONFIG — CHANGE THESE IF NEEDED
 // ═══════════════════════════════════════════════════════
-const BASE_URL = 'http://localhost:8080/i/';  // Change to your public domain later, e.g. https://vanguard.example.com/
-const USERNAME = 'admin';                     // Your FreshRSS username
-const API_PASSWORD = '1234567';               // Your API password
+const BASE_URL = 'https://entail-impeding-curler.ngrok-free.dev/i/';  // ← Your current ngrok URL
+const USERNAME = 'VANGUARD';
+const API_PASSWORD = '1234567';
 
 const API_ENDPOINT = BASE_URL + 'api/fever.php';
 
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let categories = [];   // FreshRSS groups
+let categories = [];
 let feeds = [];
-let itemsByCat = {};   // cat_id → items[]
+let itemsByCat = {};
 let view = 'home';
 let apiKey = '';
 
-// Compute Fever api_key = md5(username:api_password)
+// ═══════════════════════════════════════════════════════
+// INIT API KEY
+// ═══════════════════════════════════════════════════════
 async function initApiKey() {
   const str = `${USERNAME}:${API_PASSWORD}`;
   const enc = new TextEncoder().encode(str);
@@ -79,15 +376,24 @@ async function initApiKey() {
     .map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// Simple POST helper for Fever API
+// Simple Fever API call
 async function feverCall(params) {
   const form = new FormData();
   form.append('api_key', apiKey);
   Object.keys(params).forEach(k => form.append(k, params[k]));
 
-  const resp = await fetch(API_ENDPOINT, { method: 'POST', body: form });
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  return await resp.json();
+  try {
+    const resp = await fetch(API_ENDPOINT, { 
+      method: 'POST', 
+      body: form,
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch(e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -95,19 +401,124 @@ async function feverCall(params) {
 // ═══════════════════════════════════════════════════════
 async function loadData() {
   try {
-    document.getElementById('stat').textContent = 'Loading categories...';
+    document.getElementById('stat').textContent = 'Connecting to FreshRSS...';
+    
     const groupsResp = await feverCall({ groups: '' });
     categories = groupsResp.groups || [];
 
-    const feedsResp = await feverCall({ feeds: '' });
-    feeds = feedsResp.feeds || [];
-
-    // Load items per category (or use 'items' for global)
-    document.getElementById('stat').textContent = 'Fetching articles...';
+    document.getElementById('stat').textContent = 'Loading articles...';
+    
     for (const cat of categories) {
       const itemsResp = await feverCall({ items: '', by_category: cat.id });
       itemsByCat[cat.id] = (itemsResp.items || []).map(item => ({
-        id: item.id,
-        title: item.title,
-        link: item.url,
-        desc: item.content ? stripHtml(item.content).slice
+        title: item.title || 'Untitled',
+        link: item.url || '#',
+        desc: stripHtml(item.content || '').slice(0, 220),
+        pub: new Date(item.created_on_time * 1000),
+        sid: cat.title,
+        sshort: cat.title.substring(0, 8).toUpperCase()
+      }));
+    }
+
+    updateStat();
+    redraw();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('stat').textContent = 'ERROR — Check ngrok & FreshRSS';
+  }
+}
+
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || '';
+}
+
+function updateStat() {
+  const total = categories.length;
+  const loaded = Object.keys(itemsByCat).length;
+  document.getElementById('stat').textContent = `${loaded}/${total} categories • ${new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' })}`;
+}
+
+async function doRefresh() {
+  itemsByCat = {};
+  await loadData();
+}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function ago(d) {
+  if (!d) return '';
+  const m = Math.floor((Date.now() - d.getTime()) / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h';
+  const dy = Math.floor(h / 24);
+  if (dy < 8) return dy + 'd';
+  return d.toLocaleDateString('en-AU', { day:'numeric', month:'short' });
+}
+
+function esc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════
+// UI FUNCTIONS
+// ═══════════════════════════════════════════════════════
+function buildTabs() {
+  const tabs = [
+    { id:'home', short:'HOME' },
+    { id:'all',  short:'ALL'  },
+    ...categories.map(c => ({ id: c.id, short: c.title.toUpperCase().replace(/\s+/g, ' ') }))
+  ];
+  document.getElementById('tabsInner').innerHTML = tabs.map(t =>
+    `<button class="tab${t.id===view?' on':''}" onclick="goto('${t.id}')">${esc(t.short)}</button>`
+  ).join('');
+}
+
+function goto(id) {
+  view = id;
+  document.getElementById('main').scrollTop = 0;
+  redraw();
+}
+
+function redraw() {
+  buildTabs();
+  const home = document.getElementById('pgHome');
+  const all  = document.getElementById('pgAll');
+  const feed = document.getElementById('pgFeed');
+
+  if (view === 'home') {
+    home.style.display = ''; all.style.display = 'none'; feed.style.display = 'none';
+    drawHome(home);
+  } else if (view === 'all') {
+    home.style.display = 'none'; all.style.display = ''; feed.style.display = 'none';
+    drawAll(all);
+  } else {
+    home.style.display = 'none'; all.style.display = 'none'; feed.style.display = '';
+    const cat = categories.find(c => String(c.id) === String(view));
+    if (cat) drawFeed(feed, cat);
+  }
+}
+
+function drawHome(el) {
+  el.innerHTML = categories.map(cat => {
+    const items = itemsByCat[cat.id] || [];
+    return `<div class="tile" onclick="goto('${cat.id}')">
+      <div class="tile-id">${esc(cat.title.substring(0,10).toUpperCase())}</div>
+      <div class="tile-name">${esc(cat.title)}</div>
+      <div class="tile-info c-ok">${items.length} articles</div>
+    </div>`;
+  }).join('');
+}
+
+function drawAll(el) {
+  const allItems = [];
+  Object.values(itemsByCat).forEach(items => allItems.push(...items));
+  allItems.sort((a,b
