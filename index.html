@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vanguard Index</title>
 
 <style>
@@ -15,36 +16,36 @@
   --main:#2bb3ff;
 }
 
-/* ───────── BASE TYPOGRAPHY (BIG CHANGE) ───────── */
+/* ───────── BASE (READABILITY FIRST) ───────── */
 body {
   margin:0;
   background:var(--bg);
   color:var(--red);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.6;
 }
 
 /* ───────── HEADER ───────── */
 header {
-  padding: 22px 14px 10px;
+  padding: 26px 14px 12px;
   border-bottom: 1px solid var(--line);
-  text-align: center;
+  text-align:center;
 }
 
 h1 {
   margin:0;
-  font-size: 28px;
-  letter-spacing: 2px;
+  font-size: 34px;
+  letter-spacing: 1px;
   font-weight: 700;
   color: var(--red);
 }
 
 .subtitle {
   margin-top:10px;
-  font-size: 14px;
-  opacity: 0.8;
-  max-width: 900px;
+  font-size: 16px;
+  opacity:0.85;
+  max-width: 950px;
   margin-left:auto;
   margin-right:auto;
 }
@@ -59,14 +60,13 @@ h1 {
   border-bottom:1px solid var(--line);
 }
 
-/* BIGGER BUTTONS */
 button {
   background:transparent;
   border:1px solid var(--red);
   color:var(--red);
-  padding:10px 14px;
+  padding:12px 14px;
   cursor:pointer;
-  font-size:14px;
+  font-size:16px;
   border-radius:4px;
 }
 
@@ -75,7 +75,6 @@ button.off {
   border-color:var(--line);
 }
 
-/* panel colors */
 .p-domestic { border-color:var(--dom); color:var(--dom); }
 .p-international { border-color:var(--intl); color:var(--intl); }
 .p-unions { border-color:var(--union); color:var(--union); }
@@ -84,13 +83,12 @@ button.off {
 /* ───────── PANEL DESCRIPTION ───────── */
 .panelDesc {
   text-align:center;
-  font-size:15px;
-  opacity:0.8;
-  padding:14px 16px;
+  font-size:16px;
+  opacity:0.85;
+  padding:16px;
   border-bottom:1px solid var(--line);
-  max-width:900px;
+  max-width:950px;
   margin:0 auto;
-  line-height:1.6;
 }
 
 /* ───────── FILTERS ───────── */
@@ -98,44 +96,49 @@ button.off {
   padding:12px;
   display:flex;
   flex-wrap:wrap;
-  gap:8px;
+  gap:10px;
   justify-content:center;
   border-bottom:1px solid var(--line);
 }
 
+#filters button {
+  font-size:15px;
+  padding:10px 12px;
+}
+
 /* ───────── FEED ───────── */
 #feed {
-  padding:18px;
+  padding: 20px;
   max-width: 950px;
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 /* ARTICLE BLOCKS */
 .item {
-  padding: 16px 0;
+  padding: 22px 0;
   border-bottom: 1px solid #220000;
 }
 
-/* TITLE (much larger + readable) */
+/* HEADLINES */
 .item a {
   color: var(--red);
   text-decoration: none;
-  font-size: 19px;
+  font-size: 24px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .item a:hover {
   text-decoration: underline;
 }
 
-/* META (more readable spacing) */
+/* META INFO */
 .meta {
-  margin-top: 6px;
-  font-size: 13px;
-  opacity: 0.8;
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: 0.85;
   display:flex;
-  gap:10px;
+  gap:12px;
   flex-wrap:wrap;
 }
 
@@ -152,77 +155,6 @@ button.off {
 .t-uni { color:var(--union); border-color:var(--union); }
 .t-main { color:var(--main); border-color:var(--main); }
 
-@media (max-width: 700px) {
-
-  /* ─── GLOBAL TEXT SIZE BOOST ─── */
-  body {
-    font-size: 20px;
-    line-height: 1.6;
-  }
-
-  h1 {
-    font-size: 34px;
-    letter-spacing: 1px;
-  }
-
-  .subtitle {
-    font-size: 16px;
-    line-height: 1.6;
-    padding: 0 12px;
-  }
-
-  /* ─── PANELS (BIG TAP TARGETS) ─── */
-  #panelBar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: flex-start;
-    padding: 12px;
-    gap: 10px;
-  }
-
-  #panelBar button {
-    font-size: 16px;
-    padding: 12px 14px;
-    flex: 0 0 auto;
-  }
-
-  /* ─── FILTERS ─── */
-  #filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: flex-start;
-    padding: 12px;
-    gap: 10px;
-  }
-
-  #filters button {
-    font-size: 15px;
-    padding: 10px 12px;
-    flex: 0 0 auto;
-  }
-
-  /* ─── FEED SPACING ─── */
-  #feed {
-    padding: 16px;
-  }
-
-  .item {
-    padding: 22px 0;
-  }
-
-  /* THIS is the big change — actual article readability */
-  .item a {
-    font-size: 22px;
-    line-height: 1.5;
-  }
-
-  .meta {
-    font-size: 15px;
-    opacity: 0.85;
-    gap: 12px;
-  }
-}
-
 </style>
 </head>
 
@@ -231,7 +163,7 @@ button.off {
 <header>
   <h1>Vanguard Index</h1>
   <div class="subtitle">
-    A structured political media aggregator tracking Marxist press, labour movement communication, union updates, and Australian mainstream media for comparative analysis of news framing and class perspective.
+    A structured political media aggregator tracking Marxist press, labour movement communication, union updates, and Australian mainstream news for comparative analysis of class perspectives and narrative framing.
   </div>
 </header>
 
@@ -249,7 +181,7 @@ const PANELS={
   domestic:{
     name:"Domestic Marxist",
     class:"p-domestic",
-    desc:"Australian Marxist and socialist publications covering labour politics, organising, class analysis, and domestic political economy.",
+    desc:"Australian Marxist and socialist publications focused on labour politics, organising, and domestic political economy.",
     feeds:[
       {url:"https://www.greenleft.org.au/rss.xml",tag:"DOM",name:"Green Left"},
       {url:"https://labortribune.net.au/feed/",tag:"DOM",name:"Labor Tribune"},
@@ -262,7 +194,7 @@ const PANELS={
   international:{
     name:"International Marxist",
     class:"p-international",
-    desc:"Global socialist and Marxist media covering international labour struggles, theory, political movements, and geopolitical analysis.",
+    desc:"Global socialist and Marxist media covering international labour struggles, theory, and political developments.",
     feeds:[
       {url:"https://aworldtowinns.co.uk/feed/",tag:"INT",name:"A World To Win"},
       {url:"https://jacobin.com/feed/",tag:"INT",name:"Jacobin"},
@@ -276,7 +208,7 @@ const PANELS={
   unions:{
     name:"Unions",
     class:"p-unions",
-    desc:"Australian trade unions and labour organisations. NOTE: this panel may load slower than others due to inconsistent server response times, but all feeds remain fully functional.",
+    desc:"Australian trade unions and labour organisations. Some feeds may load slower due to inconsistent server response times, but all remain functional.",
     feeds:[
       {url:"https://www.actu.org.au/media-release/feed/",tag:"UNI",name:"ACTU"},
       {url:"https://www.aeufederal.org.au/rss/latest",tag:"UNI",name:"AEU"},
@@ -292,7 +224,7 @@ const PANELS={
   mainstream:{
     name:"Australian Mainstream",
     class:"p-mainstream",
-    desc:"Mainstream Australian media outlets providing institutional, centrist, and state-framed news coverage.",
+    desc:"Mainstream Australian media providing institutional and centrist framing of national political and economic issues.",
     feeds:[
       {url:"https://feeds.feedburner.com/IndependentAustralia",tag:"MAIN",name:"Independent Australia"},
       {url:"https://michaelwest.com.au/feed/",tag:"MAIN",name:"Michael West"},
@@ -315,7 +247,6 @@ function init(){
 }
 init();
 
-/* UI */
 function renderPanels(){
   document.getElementById("panelBar").innerHTML=
     Object.keys(PANELS).map(k=>`
@@ -345,7 +276,6 @@ function renderFilters(){
   document.getElementById("filters").innerHTML=tags+sources;
 }
 
-/* STATE */
 function setPanel(p){
   activePanel=p;
   activeSources={};
@@ -369,7 +299,6 @@ function toggleSource(n){
   load();
 }
 
-/* LOAD */
 async function load(){
   const out=document.getElementById("feed");
   out.innerHTML="syncing...";
@@ -418,7 +347,6 @@ async function load(){
   `).join("");
 }
 
-/* BOOT */
 renderPanels();
 renderPanelInfo();
 renderFilters();
