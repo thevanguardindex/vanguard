@@ -152,6 +152,76 @@ button.off {
 .t-uni { color:var(--union); border-color:var(--union); }
 .t-main { color:var(--main); border-color:var(--main); }
 
+/* ───────── MOBILE OPTIMISATION (ADD TO END OF CSS) ───────── */
+@media (max-width: 700px) {
+
+  body {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 26px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    padding: 0 10px;
+    line-height: 1.5;
+  }
+
+  /* ── PANEL NAV BECOMES HORIZONTAL SCROLL ── */
+  #panelBar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  #panelBar button {
+    flex: 0 0 auto;
+    font-size: 14px;
+    padding: 10px 12px;
+    white-space: nowrap;
+  }
+
+  /* ── FILTERS BECOME SCROLLABLE CHIPS ── */
+  #filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  #filters button {
+    flex: 0 0 auto;
+    font-size: 13px;
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+
+  /* ── FEED READABILITY ── */
+  #feed {
+    padding: 14px;
+  }
+
+  .item {
+    padding: 18px 0;
+  }
+
+  .item a {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .meta {
+    font-size: 13px;
+    gap: 10px;
+  }
+}
+
 </style>
 </head>
 
