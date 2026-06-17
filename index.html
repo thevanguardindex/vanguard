@@ -1,524 +1,359 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VANGUARD</title>
+<meta charset="utf-8">
+<title>Vanguard Index</title>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --red:    #CC0000;
-  --red2:   #8B0000;
-  --red3:   #FF2222;
-  --bg:     #0A0A0A;
-  --surf:   #131313;
-  --card:   #1A1A1A;
-  --line:   #252525;
-  --txt:    #E6E6E6;
-  --dim:    #666666;
+  --bg:#000;
+  --red:#ff2b2b;
+  --line:#2a0000;
+  --dom:#ff2b2b;
+  --intl:#ff7a2b;
+  --union:#2bff9a;
+  --main:#2bb3ff;
 }
 
-html, body {
-  background: var(--bg);
-  color: var(--txt);
-  font-family: 'IBM Plex Sans', sans-serif;
-  height: 100%;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ═══════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════ */
-#shell {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  height: 100vh;
-}
-
-/* HEADER */
-#hdr {
-  flex-shrink: 0;
-  background: var(--bg);
-  border-bottom: 2px solid var(--red);
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-#logo {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
-  font-size: 19px;
-  letter-spacing: 0.06em;
-  color: var(--red3);
-  text-shadow: 0 0 16px rgba(204,0,0,0.5);
-  line-height: 1;
-  flex-shrink: 0;
-}
-#logo em { color: var(--txt); font-style: normal; font-weight: 700; }
-
-#stat {
-  flex: 1;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--dim);
-  letter-spacing: 0.04em;
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-#btnRefresh {
-  flex-shrink: 0;
-  background: none;
-  border: 1px solid var(--red2);
-  color: var(--red2);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 2px;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: all 0.15s;
-}
-#btnRefresh:hover  { border-color: var(--red); color: var(--red); }
-#btnRefresh:disabled { opacity: 0.35; pointer-events: none; }
-
-/* TABS */
-#tabs {
-  flex-shrink: 0;
-  background: var(--surf);
-  border-bottom: 1px solid var(--line);
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-#tabs::-webkit-scrollbar { display: none; }
-
-#tabsInner {
-  display: flex;
-  padding: 0 4px;
-  min-width: max-content;
-}
-
-.tab {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 9px 12px;
-  border: none;
-  background: none;
-  color: var(--dim);
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.1s, border-color 0.1s;
-}
-.tab.on  { color: var(--red3); border-bottom-color: var(--red); }
-.tab:hover:not(.on) { color: var(--txt); }
-
-/* MAIN SCROLL AREA */
-#main {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* HOME GRID */
-#pgHome {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 12px;
-}
-@media (min-width: 460px) { #pgHome { grid-template-columns: repeat(3,1fr); } }
-@media (min-width: 640px) { #pgHome { grid-template-columns: repeat(4,1fr); } }
-
-.tile {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  padding: 12px 10px 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: border-color 0.15s, background 0.15s;
-  min-height: 76px;
-}
-.tile:hover { border-color: var(--red2); background: #180d0d; }
-
-.tile-id {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--red3);
-}
-.tile-name {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--txt);
-  line-height: 1.3;
-}
-.tile-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-.tile-info {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  margin-top: auto;
-  padding-top: 5px;
-}
-.c-ok    { color: #44AA44; }
-.c-err   { color: #AA3333; }
-.c-dim   { color: var(--dim); }
-
-/* ALL VIEW */
-#pgAll {}
-
-.all-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.1s;
-}
-.all-item:hover { background: var(--card); }
-
-.all-row1 {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-}
-.all-src {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--red2);
-  flex-shrink: 0;
-}
-.all-age {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--dim);
-  flex-shrink: 0;
-}
-.all-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--txt);
-  line-height: 1.35;
-}
-
-/* FEED VIEW */
-#pgFeed {}
-
-.feed-hdr {
-  padding: 14px 14px 10px;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-.feed-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--txt);
-  line-height: 1.2;
-}
-.feed-sub {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--dim);
-  margin-top: 3px;
-  letter-spacing: 0.04em;
-}
-.badge {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 3px 7px;
-  border-radius: 2px;
-  border: 1px solid;
-  flex-shrink: 0;
-  margin-top: 4px;
-}
-
-.art {
-  display: block;
-  padding: 13px 14px;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.1s;
-}
-.art:hover { background: var(--card); }
-
-.art-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--txt);
-  line-height: 1.4;
-  margin-bottom: 5px;
-}
-.art-meta {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.art-meta .dot { color: var(--red2); }
-.art-desc {
-  font-size: 13px;
-  color: var(--dim);
+/* ───────── BASE TYPOGRAPHY (BIG CHANGE) ───────── */
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--red);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 17px;
   line-height: 1.5;
-  margin-top: 5px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* MESSAGES */
-.msg {
-  padding: 48px 20px;
+/* ───────── HEADER ───────── */
+header {
+  padding: 22px 14px 10px;
+  border-bottom: 1px solid var(--line);
   text-align: center;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--dim);
-  letter-spacing: 0.04em;
-  line-height: 1.9;
 }
-.msg a { color: var(--red); text-decoration: none; }
-.msg a:hover { text-decoration: underline; }
-.msg.err { color: var(--red2); }
 
-@keyframes pulse { 50% { opacity: 0.2; } }
-.loading::before {
-  content: '▓▒░  ';
+h1 {
+  margin:0;
+  font-size: 28px;
+  letter-spacing: 2px;
+  font-weight: 700;
   color: var(--red);
-  animation: pulse 0.8s step-end infinite;
 }
+
+.subtitle {
+  margin-top:10px;
+  font-size: 14px;
+  opacity: 0.8;
+  max-width: 900px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* ───────── PANELS ───────── */
+#panelBar {
+  padding: 14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  border-bottom:1px solid var(--line);
+}
+
+/* BIGGER BUTTONS */
+button {
+  background:transparent;
+  border:1px solid var(--red);
+  color:var(--red);
+  padding:10px 14px;
+  cursor:pointer;
+  font-size:14px;
+  border-radius:4px;
+}
+
+button.off {
+  opacity:0.35;
+  border-color:var(--line);
+}
+
+/* panel colors */
+.p-domestic { border-color:var(--dom); color:var(--dom); }
+.p-international { border-color:var(--intl); color:var(--intl); }
+.p-unions { border-color:var(--union); color:var(--union); }
+.p-mainstream { border-color:var(--main); color:var(--main); }
+
+/* ───────── PANEL DESCRIPTION ───────── */
+.panelDesc {
+  text-align:center;
+  font-size:15px;
+  opacity:0.8;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  max-width:900px;
+  margin:0 auto;
+  line-height:1.6;
+}
+
+/* ───────── FILTERS ───────── */
+#filters {
+  padding:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  border-bottom:1px solid var(--line);
+}
+
+/* ───────── FEED ───────── */
+#feed {
+  padding:18px;
+  max-width: 950px;
+  margin:0 auto;
+}
+
+/* ARTICLE BLOCKS */
+.item {
+  padding: 16px 0;
+  border-bottom: 1px solid #220000;
+}
+
+/* TITLE (much larger + readable) */
+.item a {
+  color: var(--red);
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.item a:hover {
+  text-decoration: underline;
+}
+
+/* META (more readable spacing) */
+.meta {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.8;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* TAGS */
+.tag {
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid;
+  font-size: 12px;
+}
+
+.t-dom { color:var(--dom); border-color:var(--dom); }
+.t-int { color:var(--intl); border-color:var(--intl); }
+.t-uni { color:var(--union); border-color:var(--union); }
+.t-main { color:var(--main); border-color:var(--main); }
+
 </style>
 </head>
+
 <body>
-<div id="shell">
 
-  <header id="hdr">
-    <div id="logo">VAN<em>GUARD</em></div>
-    <div id="stat">Initialising…</div>
-    <button id="btnRefresh" onclick="doRefresh()">↻ REFRESH</button>
-  </header>
-
-  <div id="tabs"><div id="tabsInner"></div></div>
-
-  <div id="main">
-    <div id="pgHome"></div>
-    <div id="pgAll"  style="display:none"></div>
-    <div id="pgFeed" style="display:none"></div>
+<header>
+  <h1>Vanguard Index</h1>
+  <div class="subtitle">
+    A structured political media aggregator tracking Marxist press, labour movement communication, union updates, and Australian mainstream media for comparative analysis of news framing and class perspective.
   </div>
+</header>
 
-</div>
+<div id="panelBar"></div>
+<div id="panelInfo"></div>
+<div id="filters"></div>
+<div id="feed">initialising...</div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// CONFIG — CHANGE THESE IF NEEDED
-// ═══════════════════════════════════════════════════════
-const BASE_URL = 'https://entail-impeding-curler.ngrok-free.dev/i/';  // ← Your current ngrok URL
-const USERNAME = 'VANGUARD';
-const API_PASSWORD = '1234567';
 
-const API_ENDPOINT = BASE_URL + 'api/fever.php';
+const API="https://api.rss2json.com/v1/api.json?rss_url=";
 
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let categories = [];
-let feeds = [];
-let itemsByCat = {};
-let view = 'home';
-let apiKey = '';
+/* ───────── PANELS ───────── */
+const PANELS={
+  domestic:{
+    name:"Domestic Marxist",
+    class:"p-domestic",
+    desc:"Australian Marxist and socialist publications covering labour politics, organising, class analysis, and domestic political economy.",
+    feeds:[
+      {url:"https://www.greenleft.org.au/rss.xml",tag:"DOM",name:"Green Left"},
+      {url:"https://labortribune.net.au/feed/",tag:"DOM",name:"Labor Tribune"},
+      {url:"https://partisanmagazine.org/feed/",tag:"DOM",name:"Partisan"},
+      {url:"https://redflag.org.au/rss/",tag:"DOM",name:"Red Flag"},
+      {url:"https://solidarity.net.au/feed/",tag:"DOM",name:"Solidarity"}
+    ]
+  },
 
-// ═══════════════════════════════════════════════════════
-// INIT API KEY
-// ═══════════════════════════════════════════════════════
-async function initApiKey() {
-  const str = `${USERNAME}:${API_PASSWORD}`;
-  const enc = new TextEncoder().encode(str);
-  const hashBuffer = await crypto.subtle.digest('MD5', enc);
-  apiKey = Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2,'0')).join('');
-}
+  international:{
+    name:"International Marxist",
+    class:"p-international",
+    desc:"Global socialist and Marxist media covering international labour struggles, theory, political movements, and geopolitical analysis.",
+    feeds:[
+      {url:"https://aworldtowinns.co.uk/feed/",tag:"INT",name:"A World To Win"},
+      {url:"https://jacobin.com/feed/",tag:"INT",name:"Jacobin"},
+      {url:"https://liberationnews.org/feed/",tag:"INT",name:"Liberation News"},
+      {url:"https://monthlyreview.org/feed/",tag:"INT",name:"Monthly Review"},
+      {url:"https://newleftreview.org/feed",tag:"INT",name:"New Left Review"},
+      {url:"https://peoplesdispatch.org/feed/",tag:"INT",name:"Peoples Dispatch"}
+    ]
+  },
 
-// Simple Fever API call
-async function feverCall(params) {
-  const form = new FormData();
-  form.append('api_key', apiKey);
-  Object.keys(params).forEach(k => form.append(k, params[k]));
+  unions:{
+    name:"Unions",
+    class:"p-unions",
+    desc:"Australian trade unions and labour organisations. NOTE: this panel may load slower than others due to inconsistent server response times, but all feeds remain fully functional.",
+    feeds:[
+      {url:"https://www.actu.org.au/media-release/feed/",tag:"UNI",name:"ACTU"},
+      {url:"https://www.aeufederal.org.au/rss/latest",tag:"UNI",name:"AEU"},
+      {url:"https://www.amwu.org.au/media_releases.rss",tag:"UNI",name:"AMWU"},
+      {url:"https://cg.cfmeu.org/feed/",tag:"UNI",name:"CFMEU"},
+      {url:"https://www.ieu.org.au/feed/",tag:"UNI",name:"IEU"},
+      {url:"https://meu.org.au/feed/",tag:"UNI",name:"MEU"},
+      {url:"https://www.rtbu.org.au/transport_now.rss",tag:"UNI",name:"RTBU"},
+      {url:"https://unitedworkers.org.au/feed/",tag:"UNI",name:"United Workers"}
+    ]
+  },
 
-  try {
-    const resp = await fetch(API_ENDPOINT, { 
-      method: 'POST', 
-      body: form,
-      signal: AbortSignal.timeout(15000)
-    });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return await resp.json();
-  } catch(e) {
-    console.error(e);
-    throw e;
+  mainstream:{
+    name:"Australian Mainstream",
+    class:"p-mainstream",
+    desc:"Mainstream Australian media outlets providing institutional, centrist, and state-framed news coverage.",
+    feeds:[
+      {url:"https://feeds.feedburner.com/IndependentAustralia",tag:"MAIN",name:"Independent Australia"},
+      {url:"https://michaelwest.com.au/feed/",tag:"MAIN",name:"Michael West"},
+      {url:"https://www.abc.net.au/news/feed/104217372/rss.xml",tag:"ABC",name:"ABC News"},
+      {url:"https://www.abc.net.au/news/feed/10719986/rss.xml",tag:"ABC",name:"ABC Politics"},
+      {url:"https://www.theguardian.com/australia-news/rss",tag:"MAIN",name:"Guardian AU"}
+    ]
   }
+};
+
+let activePanel="domestic";
+let activeSources={};
+let activeTags={};
+
+function init(){
+  PANELS[activePanel].feeds.forEach(f=>{
+    activeSources[f.name]=true;
+    activeTags[f.tag]=true;
+  });
+}
+init();
+
+/* UI */
+function renderPanels(){
+  document.getElementById("panelBar").innerHTML=
+    Object.keys(PANELS).map(k=>`
+      <button class="${PANELS[k].class} ${activePanel===k?'':'off'}"
+        onclick="setPanel('${k}')">
+        ${PANELS[k].name}
+      </button>
+    `).join("");
 }
 
-// ═══════════════════════════════════════════════════════
-// LOAD DATA
-// ═══════════════════════════════════════════════════════
-async function loadData() {
-  try {
-    document.getElementById('stat').textContent = 'Connecting to FreshRSS...';
-    
-    const groupsResp = await feverCall({ groups: '' });
-    categories = groupsResp.groups || [];
-
-    document.getElementById('stat').textContent = 'Loading articles...';
-    
-    for (const cat of categories) {
-      const itemsResp = await feverCall({ items: '', by_category: cat.id });
-      itemsByCat[cat.id] = (itemsResp.items || []).map(item => ({
-        title: item.title || 'Untitled',
-        link: item.url || '#',
-        desc: stripHtml(item.content || '').slice(0, 220),
-        pub: new Date(item.created_on_time * 1000),
-        sid: cat.title,
-        sshort: cat.title.substring(0, 8).toUpperCase()
-      }));
-    }
-
-    updateStat();
-    redraw();
-  } catch(e) {
-    console.error(e);
-    document.getElementById('stat').textContent = 'ERROR — Check ngrok & FreshRSS';
-  }
+function renderPanelInfo(){
+  document.getElementById("panelInfo").innerHTML=
+    `<div class="panelDesc">${PANELS[activePanel].desc}</div>`;
 }
 
-function stripHtml(html) {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || '';
+function renderFilters(){
+  const feeds=PANELS[activePanel].feeds;
+
+  const tags=[...new Set(feeds.map(f=>f.tag))].map(t=>
+    `<button onclick="toggleTag('${t}')" class="${activeTags[t]?'':'off'}">${t}</button>`
+  ).join("");
+
+  const sources=feeds.map(f=>
+    `<button onclick="toggleSource('${f.name}')" class="${activeSources[f.name]?'':'off'}">${f.name}</button>`
+  ).join("");
+
+  document.getElementById("filters").innerHTML=tags+sources;
 }
 
-function updateStat() {
-  const total = categories.length;
-  const loaded = Object.keys(itemsByCat).length;
-  document.getElementById('stat').textContent = `${loaded}/${total} categories • ${new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' })}`;
+/* STATE */
+function setPanel(p){
+  activePanel=p;
+  activeSources={};
+  activeTags={};
+  init();
+  renderPanels();
+  renderPanelInfo();
+  renderFilters();
+  load();
 }
 
-async function doRefresh() {
-  itemsByCat = {};
-  await loadData();
+function toggleTag(t){
+  activeTags[t]=!activeTags[t];
+  renderFilters();
+  load();
 }
 
-// ═══════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════
-function ago(d) {
-  if (!d) return '';
-  const m = Math.floor((Date.now() - d.getTime()) / 60000);
-  if (m < 1) return 'just now';
-  if (m < 60) return m + 'm';
-  const h = Math.floor(m / 60);
-  if (h < 24) return h + 'h';
-  const dy = Math.floor(h / 24);
-  if (dy < 8) return dy + 'd';
-  return d.toLocaleDateString('en-AU', { day:'numeric', month:'short' });
+function toggleSource(n){
+  activeSources[n]=!activeSources[n];
+  renderFilters();
+  load();
 }
 
-function esc(s) {
-  return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+/* LOAD */
+async function load(){
+  const out=document.getElementById("feed");
+  out.innerHTML="syncing...";
+
+  let all=[];
+
+  const feeds=PANELS[activePanel].feeds;
+
+  await Promise.all(feeds.map(async f=>{
+
+    if(!activeSources[f.name]) return;
+    if(!activeTags[f.tag]) return;
+
+    try{
+      const res=await fetch(API+encodeURIComponent(f.url));
+      const data=await res.json();
+      if(!data.items) return;
+
+      data.items.forEach(i=>{
+        const link=i.link||i.guid||(i.enclosure&&i.enclosure.link)||"";
+        if(!link||!i.title) return;
+
+        all.push({
+          title:i.title,
+          link,
+          date:i.pubDate,
+          source:f.name,
+          tag:f.tag
+        });
+      });
+
+    }catch(e){}
+  }));
+
+  all.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  out.innerHTML=all.slice(0,180).map(i=>`
+    <div class="item">
+      <a href="${i.link}" target="_blank">${i.title}</a>
+      <div class="meta">
+        <span class="tag t-${i.tag==='DOM'?'dom':i.tag==='INT'?'int':i.tag==='UNI'?'uni':'main'}">${i.tag}</span>
+        <span>${i.source}</span>
+        <span>${i.date||""}</span>
+      </div>
+    </div>
+  `).join("");
 }
 
-// ═══════════════════════════════════════════════════════
-// UI FUNCTIONS
-// ═══════════════════════════════════════════════════════
-function buildTabs() {
-  const tabs = [
-    { id:'home', short:'HOME' },
-    { id:'all',  short:'ALL'  },
-    ...categories.map(c => ({ id: c.id, short: c.title.toUpperCase().replace(/\s+/g, ' ') }))
-  ];
-  document.getElementById('tabsInner').innerHTML = tabs.map(t =>
-    `<button class="tab${t.id===view?' on':''}" onclick="goto('${t.id}')">${esc(t.short)}</button>`
-  ).join('');
-}
+/* BOOT */
+renderPanels();
+renderPanelInfo();
+renderFilters();
+load();
 
-function goto(id) {
-  view = id;
-  document.getElementById('main').scrollTop = 0;
-  redraw();
-}
+</script>
 
-function redraw() {
-  buildTabs();
-  const home = document.getElementById('pgHome');
-  const all  = document.getElementById('pgAll');
-  const feed = document.getElementById('pgFeed');
-
-  if (view === 'home') {
-    home.style.display = ''; all.style.display = 'none'; feed.style.display = 'none';
-    drawHome(home);
-  } else if (view === 'all') {
-    home.style.display = 'none'; all.style.display = ''; feed.style.display = 'none';
-    drawAll(all);
-  } else {
-    home.style.display = 'none'; all.style.display = 'none'; feed.style.display = '';
-    const cat = categories.find(c => String(c.id) === String(view));
-    if (cat) drawFeed(feed, cat);
-  }
-}
-
-function drawHome(el) {
-  el.innerHTML = categories.map(cat => {
-    const items = itemsByCat[cat.id] || [];
-    return `<div class="tile" onclick="goto('${cat.id}')">
-      <div class="tile-id">${esc(cat.title.substring(0,10).toUpperCase())}</div>
-      <div class="tile-name">${esc(cat.title)}</div>
-      <div class="tile-info c-ok">${items.length} articles</div>
-    </div>`;
-  }).join('');
-}
-
-function drawAll(el) {
-  const allItems = [];
-  Object.values(itemsByCat).forEach(items => allItems.push(...items));
-  allItems.sort((a,b
+</body>
+</html>
