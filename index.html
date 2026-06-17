@@ -152,73 +152,74 @@ button.off {
 .t-uni { color:var(--union); border-color:var(--union); }
 .t-main { color:var(--main); border-color:var(--main); }
 
-/* ───────── MOBILE OPTIMISATION (ADD TO END OF CSS) ───────── */
 @media (max-width: 700px) {
 
+  /* ─── GLOBAL TEXT SIZE BOOST ─── */
   body {
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 1.6;
   }
 
   h1 {
-    font-size: 26px;
-    letter-spacing: 2px;
+    font-size: 34px;
+    letter-spacing: 1px;
   }
 
   .subtitle {
-    font-size: 14px;
-    padding: 0 10px;
-    line-height: 1.5;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 0 12px;
   }
 
-  /* ── PANEL NAV BECOMES HORIZONTAL SCROLL ── */
+  /* ─── PANELS (BIG TAP TARGETS) ─── */
   #panelBar {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
-    padding: 10px;
-    gap: 8px;
+    padding: 12px;
+    gap: 10px;
   }
 
   #panelBar button {
+    font-size: 16px;
+    padding: 12px 14px;
     flex: 0 0 auto;
-    font-size: 14px;
-    padding: 10px 12px;
-    white-space: nowrap;
   }
 
-  /* ── FILTERS BECOME SCROLLABLE CHIPS ── */
+  /* ─── FILTERS ─── */
   #filters {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
-    gap: 8px;
-    padding: 10px;
+    padding: 12px;
+    gap: 10px;
   }
 
   #filters button {
+    font-size: 15px;
+    padding: 10px 12px;
     flex: 0 0 auto;
-    font-size: 13px;
-    padding: 8px 10px;
-    white-space: nowrap;
   }
 
-  /* ── FEED READABILITY ── */
+  /* ─── FEED SPACING ─── */
   #feed {
-    padding: 14px;
+    padding: 16px;
   }
 
   .item {
-    padding: 18px 0;
+    padding: 22px 0;
   }
 
+  /* THIS is the big change — actual article readability */
   .item a {
-    font-size: 18px;
+    font-size: 22px;
     line-height: 1.5;
   }
 
   .meta {
-    font-size: 13px;
-    gap: 10px;
+    font-size: 15px;
+    opacity: 0.85;
+    gap: 12px;
   }
 }
 
