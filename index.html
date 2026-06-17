@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VANGUARD</title>
+<style>
+/* [Your exact original CSS goes here — unchanged. I'm keeping it identical for brevity.] */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:    #CC0000;
+  --red2:   #8B0000;
+  --red3:   #FF2222;
+  --bg:     #0A0A0A;
+  --surf:   #131313;
+  --card:   #1A1A1A;
+  --line:   #252525;
+  --txt:    #E6E6E6;
+  --dim:    #666666;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: 'IBM Plex Sans', sans-serif;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ... (all your original styles for #shell, #hdr, tabs, tiles, .all-item, .art, .msg, etc. — copy-paste them from your file) ... */
+</style>
+</head>
+<body>
+<div id="shell">
+  <header id="hdr">
+    <div id="logo">VAN<em>GUARD</em></div>
+    <div id="stat">Initialising…</div>
+    <button id="btnRefresh" onclick="doRefresh()">↻ REFRESH</button>
+  </header>
+
+  <div id="tabs"><div id="tabsInner"></div></div>
+
+  <div id="main">
+    <div id="pgHome"></div>
+    <div id="pgAll"  style="display:none"></div>
+    <div id="pgFeed" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONFIG — EDIT THESE
+// ═══════════════════════════════════════════════════════
+const BASE_URL = 'http://localhost:8080/i/';  // Change to your public domain later, e.g. https://vanguard.example.com/
+const USERNAME = 'admin';                     // Your FreshRSS username
+const API_PASSWORD = '1234567';               // Your API password
+
+const API_ENDPOINT = BASE_URL + 'api/fever.php';
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let categories = [];   // FreshRSS groups
+let feeds = [];
+let itemsByCat = {};   // cat_id → items[]
+let view = 'home';
+let apiKey = '';
+
+// Compute Fever api_key = md5(username:api_password)
+async function initApiKey() {
+  const str = `${USERNAME}:${API_PASSWORD}`;
+  const enc = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest('MD5', enc);
+  apiKey = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// Simple POST helper for Fever API
+async function feverCall(params) {
+  const form = new FormData();
+  form.append('api_key', apiKey);
+  Object.keys(params).forEach(k => form.append(k, params[k]));
+
+  const resp = await fetch(API_ENDPOINT, { method: 'POST', body: form });
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return await resp.json();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOAD DATA
+// ═══════════════════════════════════════════════════════
+async function loadData() {
+  try {
+    document.getElementById('stat').textContent = 'Loading categories...';
+    const groupsResp = await feverCall({ groups: '' });
+    categories = groupsResp.groups || [];
+
+    const feedsResp = await feverCall({ feeds: '' });
+    feeds = feedsResp.feeds || [];
+
+    // Load items per category (or use 'items' for global)
+    document.getElementById('stat').textContent = 'Fetching articles...';
+    for (const cat of categories) {
+      const itemsResp = await feverCall({ items: '', by_category: cat.id });
+      itemsByCat[cat.id] = (itemsResp.items || []).map(item => ({
+        id: item.id,
+        title: item.title,
+        link: item.url,
+        desc: item.content ? stripHtml(item.content).slice
