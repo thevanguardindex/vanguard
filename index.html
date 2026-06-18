@@ -174,7 +174,8 @@ button.off {
 
 <script>
 
-const API="https://api.rss2json.com/v1/api.json?rss_url=";
+const API_BASE = "https://api.rss2json.com/v1/api.json";
+const API_KEY = "cwffkgu62gvzuj4wogpmr8xuhnteqocw6hru4qld";   // ← Paste your rss2json basic tier key here
 
 /* ───────── PANELS ───────── */
 const PANELS={
@@ -184,7 +185,7 @@ const PANELS={
     desc:"Australian Marxist and socialist publications focused on labour politics, organising, and domestic political economy.",
     feeds:[
       {url:"https://rss.app/feeds/SDTHR4bGkhlP1faW.xml",tag:"DOM",name:"Australian Marxist Review - CPA"},
-      {url:"https://rss.app/feeds/v1.1/zLQElrTepmwZtYnz.json",tag:"DOM",name:"The Guardian - CPA"},
+      {url:"https://rss.app/feeds/zLQElrTepmwZtYnz.xml",tag:"DOM",name:"The Guardian - CPA"},
       {url:"https://www.greenleft.org.au/rss.xml",tag:"DOM",name:"Green Left"},
       {url:"https://labortribune.net.au/feed/",tag:"DOM",name:"Labor Tribune"},
       {url:"https://partisanmagazine.org/feed/",tag:"DOM",name:"Partisan"},
@@ -315,7 +316,8 @@ async function load(){
     if(!activeTags[f.tag]) return;
 
     try{
-      const res=await fetch(API+encodeURIComponent(f.url));
+      const url = `${API_BASE}?rss_url=${encodeURIComponent(f.url)}&api_key=${API_KEY}`;
+      const res=await fetch(url);
       const data=await res.json();
       if(!data.items) return;
 
